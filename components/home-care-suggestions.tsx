@@ -51,21 +51,15 @@ export function HomeCareSuggestions() {
         </Link>
       </div>
 
-      {/* Horizontal scroll container */}
-      <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-        <div className="flex gap-4 min-w-min">
-          {suggestions.map((suggestion) => (
-            <div
+      {/* Vertical notification list */}
+      <div className="flex flex-col gap-3">
+        {suggestions.map((suggestion) => (
+            <CareSuggestionCard
               key={suggestion.id}
-              className="w-80 flex-shrink-0"
-            >
-              <CareSuggestionCard
-                suggestion={suggestion}
-                compact={true}
-              />
-            </div>
-          ))}
-        </div>
+              suggestion={suggestion}
+              variant="notification"
+            />
+        ))}
       </div>
     </section>
   )

@@ -9,12 +9,14 @@ interface CareSuggestionCardProps {
   suggestion: CareSuggestion
   onFeedback?: (feedback: CareFeedback) => void
   compact?: boolean
+  variant?: 'card' | 'notification' 
 }
 
 export function CareSuggestionCard({
   suggestion,
   onFeedback,
   compact = false,
+  variant = 'card',
 }: CareSuggestionCardProps) {
   const [expanded, setExpanded] = useState(false)
   const [feedback, setFeedback] = useState<boolean | null>(null)
@@ -22,31 +24,126 @@ export function CareSuggestionCard({
     'not-relevant' | 'too-basic' | 'dont-want-category' | null
   >(null)
 
-  const categoryColor = getCategoryColor(suggestion.category)
   const categoryLabel = getCategoryLabel(suggestion.category)
+
+  // Map categories to feature feature themes (Pink, Blue, Violet)
+  const getThemeColors = (category: string) => {
+    switch (category) {
+      case 'nutrition': // Feature: Food & Mood (Pink)
+        return {
+          bg: 'bg-[#FFF0F5]',
+          text: 'text-[#DB2777]',
+          dot: 'bg-[#DB2777]',
+          badge: 'bg-[#FFF0F5] text-[#DB2777]'
+        }
+      case 'physical-care': // Feature: Movement (Blue)
+         return {
+          bg: 'bg-[#EFF6FF]',
+          text: 'text-[#2563EB]',
+          dot: 'bg-[#2563EB]',
+          badge: 'bg-[#EFF6FF] text-[#2563EB]'
+        }
+      case 'rest': // Feature: Sounds (Violet)
+        return {
+          bg: 'bg-[#F5F3FF]',
+          text: 'text-[#7C3AED]',
+          dot: 'bg-[#7C3AED]',
+          badge: 'bg-[#F5F3FF] text-[#7C3AED]'
+        }
+      case 'emotional-care': // Feature: Journal (Blue)
+      case 'mental-checkin':
+        return {
+          bg: 'bg-[#EFF6FF]',
+          text: 'text-[#2563EB]',
+          dot: 'bg-[#2563EB]',
+          badge: 'bg-[#EFF6FF] text-[#2563EB]'
+        }
+      default:
+        return {
+          bg: 'bg-neutral-50',
+          text: 'text-neutral-900',
+          dot: 'bg-neutral-400',
+          badge: 'bg-neutral-100 text-neutral-600'
+        }
+    }
+  }
+
+  const theme = getThemeColors(suggestion.category)
 
   const handleFeedback = (helpful: boolean) => {
     setFeedback(helpful)
-    if (helpful) {
-      onFeedback?.({
+    if (onFeedback) {
+      onFeedback({
         suggestionId: suggestion.id,
-        helpful: true,
+        helpful: helpful,
       })
     }
   }
 
-  const handleNegativeFeedback = (
-    reason: 'not-relevant' | 'too-basic' | 'dont-want-category',
-  ) => {
+  const handleNegativeFeedback = (reason: 'not-relevant' | 'too-basic' | 'dont-want-category') => {
     setFeedbackReason(reason)
-    onFeedback?.({
-      suggestionId: suggestion.id,
-      helpful: false,
-      reason,
-    })
-    setFeedback(false)
+    if (onFeedback) {
+      onFeedback({
+        suggestionId: suggestion.id,
+        helpful: false,
+        reason,
+      })
+    }
   }
 
+  // --- NOTIFICATION VARIANT ---
+  if (variant === 'notification') {
+    if (feedback === false && feedbackReason) return null; // Hide completely if dismissed
+
+    return (
+      <div className="group relative flex items-center justify-between p-4 rounded-2xl border border-neutral-100 bg-white transition-all hover:bg-neutral-50/80 hover:shadow-sm">
+        <div className="flex items-center gap-4 flex-1 min-w-0">
+          {/* Badge Dot */}
+           <div className={`flex-shrink-0 w-1.5 h-10 rounded-full ${theme.dot}`} />
+           
+           <div className="flex-1 min-w-0">
+             <div className="flex items-center gap-3 mb-1">
+               <span className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full ${theme.badge}`}>
+                 {categoryLabel}
+               </span>
+             </div>
+             <p className="text-[14px] font-medium text-neutral-900 truncate">
+                {suggestion.suggestion}
+             </p>
+             <p className="text-[12px] text-neutral-500 truncate pr-4">
+               {suggestion.empathy}
+             </p>
+           </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex items-center gap-1 pl-2 opacity-0 group-hover:opacity-100 transition-opacity">
+           {feedback === true ? (
+             <span className={`text-xs font-medium px-2 py-1 rounded-full ${theme.badge}`}>Saved</span>
+           ) : (
+             <>
+              <button 
+                onClick={() => handleFeedback(true)}
+                className="p-2 rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-green-600 transition-colors"
+                title="Helpful"
+              >
+                <ThumbsUp className="h-4 w-4" />
+              </button>
+              <button 
+                onClick={() => handleFeedback(false)}
+                className="p-2 rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-red-500 transition-colors"
+                title="Not for me"
+              >
+                 <ChevronDown className="h-4 w-4 rotate-45" /> 
+              </button>
+             </>
+           )}
+        </div>
+      </div>
+    )
+  }
+
+  // --- CARD VARIANT (Default) ---
   if (feedback === false && feedbackReason) {
     return (
       <div
@@ -62,7 +159,7 @@ export function CareSuggestionCard({
             setFeedback(null)
             setFeedbackReason(null)
           }}
-          className="text-[12px] text-brand-pink hover:underline"
+          className={`text-[12px] hover:underline ${theme.text}`}
         >
           Show suggestion
         </button>
@@ -79,7 +176,7 @@ export function CareSuggestionCard({
       {/* Category badge */}
       <div className="mb-3 inline-block">
         <span
-          className={`px-2.5 py-1 rounded-full text-[12px] font-medium ${categoryColor}`}
+          className={`px-2.5 py-1 rounded-full text-[12px] font-medium ${theme.badge}`}
         >
           {categoryLabel}
         </span>
