@@ -52,7 +52,7 @@ export default function JournalPage() {
   if (selectedEntry) {
     return (
       <main className="min-h-screen bg-background">
-        <div className="max-w-2xl mx-auto h-screen flex flex-col">
+        <div className="w-full max-w-6xl mx-auto h-screen flex flex-col">
           <div className="border-b border-border p-4 sm:p-6">
             <button
               onClick={() => setSelectedEntry(null)}
@@ -82,7 +82,7 @@ export default function JournalPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="max-w-2xl mx-auto h-screen flex flex-col">
+      <div className="w-full max-w-6xl mx-auto h-screen flex flex-col">
         {/* View Toggle */}
         <div className="border-b border-border p-4 sm:p-6 flex gap-2">
           <button

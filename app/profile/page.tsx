@@ -66,7 +66,7 @@ export default function ProfilePage() {
   if (view === 'editing' && editingSection) {
     return (
       <main className="min-h-screen bg-background">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
           <ProfileSectionEditor
             section={editingSection}
             profile={profile}
@@ -83,7 +83,7 @@ export default function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
         {/* Header */}
         <div className="mb-8">
           <Link

@@ -1,18 +1,20 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Droplet } from 'lucide-react'
+import { Droplet, RotateCcw } from 'lucide-react'
 import { calculateGlassesFromAmount, formatGlassCount, getProgressPercentage, getProgressMessage } from '@/lib/hydration-utils'
 import type { HydrationEntry } from '@/lib/hydration-types'
 
 interface HydrationLoggerProps {
   todayEntries: HydrationEntry[]
   onLogWater: (amount: 'half' | 'full') => void
+  onUndo?: () => void
 }
 
 export function HydrationLogger({
   todayEntries,
   onLogWater,
+  onUndo,
 }: HydrationLoggerProps) {
   const [glassCount, setGlassCount] = useState(0)
 
@@ -101,19 +103,32 @@ export function HydrationLogger({
       </div>
 
       {/* Log Buttons */}
-      <div className="flex gap-3">
-        <button
-          onClick={() => onLogWater('half')}
-          className="flex-1 px-4 py-3 rounded-lg border-2 border-blue-100 text-blue-600 font-medium hover:bg-blue-50 hover:border-blue-200 transition-colors"
-        >
-          + ½ glass
-        </button>
-        <button
-          onClick={() => onLogWater('full')}
-          className="flex-1 px-4 py-3 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 shadow-sm shadow-blue-200 transition-all hover:shadow-md"
-        >
-          + 1 glass
-        </button>
+      <div className="flex flex-col gap-3">
+        <div className="flex gap-3">
+          <button
+            onClick={() => onLogWater('half')}
+            className="flex-1 px-4 py-3 rounded-lg border-2 border-blue-100 text-blue-600 font-medium hover:bg-blue-50 hover:border-blue-200 transition-colors"
+          >
+            + ½ glass
+          </button>
+          <button
+            onClick={() => onLogWater('full')}
+            className="flex-1 px-4 py-3 rounded-lg bg-blue-500 text-white font-medium hover:bg-blue-600 shadow-sm shadow-blue-200 transition-all hover:shadow-md"
+          >
+            + 1 glass
+          </button>
+        </div>
+        
+        {/* Undo Button */}
+        {todayEntries.length > 0 && onUndo && (
+          <button
+            onClick={onUndo}
+            className="flex items-center justify-center gap-2 py-2 text-sm text-blue-400 hover:text-blue-600 transition-colors"
+          >
+            <RotateCcw className="h-3 w-3" />
+            Undo last
+          </button>
+        )}
       </div>
 
       {/* Entries List */}

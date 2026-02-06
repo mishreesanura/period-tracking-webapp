@@ -14,7 +14,7 @@ export default function SettingsPage() {
   if (section === 'notifications') {
     return (
       <main className="min-h-screen bg-background">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
           <NotificationSettings onClose={() => setSection('main')} />
         </div>
       </main>
@@ -24,7 +24,7 @@ export default function SettingsPage() {
   if (section === 'partner') {
     return (
       <main className="min-h-screen bg-background">
-        <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
           <PartnerSettings onClose={() => setSection('main')} />
         </div>
       </main>
@@ -33,7 +33,7 @@ export default function SettingsPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
         {/* Header */}
         <div className="mb-8">
           <Link

@@ -54,7 +54,7 @@ export default function CarePage() {
 
   return (
     <main className="min-h-screen bg-background pt-12 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-3xl">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl sm:text-4xl font-bold text-foreground mb-2">

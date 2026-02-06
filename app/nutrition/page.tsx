@@ -60,7 +60,7 @@ export default function NutritionPage() {
 
   return (
     <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link

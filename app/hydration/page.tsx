@@ -53,9 +53,29 @@ export default function HydrationPage() {
     }
   }
 
+  const handleUndo = () => {
+    if (todayEntries.length === 0) return
+
+    const lastEntry = todayEntries[todayEntries.length - 1]
+    
+    // Remove from state
+    setTodayEntries((prev) => prev.slice(0, -1))
+
+    // Remove from localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('hydrationEntries')
+      if (saved) {
+        const allEntries: HydrationEntry[] = JSON.parse(saved)
+        // Filter out the specific entry ID
+        const updatedEntries = allEntries.filter(e => e.id !== lastEntry.id)
+        localStorage.setItem('hydrationEntries', JSON.stringify(updatedEntries))
+      }
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 pt-8 pb-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link
@@ -96,6 +116,7 @@ export default function HydrationPage() {
             <HydrationLogger
               todayEntries={todayEntries}
               onLogWater={handleLogWater}
+              onUndo={handleUndo}
             />
           </div>
 
