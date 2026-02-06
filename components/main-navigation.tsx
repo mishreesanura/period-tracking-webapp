@@ -36,7 +36,7 @@ export function MainNavigation() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center">
             <Link href="/" className="text-xl font-semibold text-foreground">
-              My Cycle
+              ऋतु
             </Link>
           </div>
 

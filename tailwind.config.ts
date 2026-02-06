@@ -41,6 +41,18 @@ const config: Config = {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
         },
+        brand: {
+          pink: '#FB7185', // rose-400
+          violet: '#A78BFA', // violet-400
+          blue: '#60A5FA', // blue-400
+        },
+        neutral: {
+          white: '#FFFFFF',
+          black: '#171717', // neutral-900
+        },
+        status: {
+          error: '#EF4444', // red-500
+        },
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
@@ -61,6 +73,9 @@ const config: Config = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+      },
+      fontFamily: {
+        instrument: ['var(--font-instrument)', 'sans-serif'],
       },
       borderRadius: {
         lg: 'var(--radius)',

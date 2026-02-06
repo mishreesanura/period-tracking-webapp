@@ -50,11 +50,11 @@ export function CareSuggestionCard({
   if (feedback === false && feedbackReason) {
     return (
       <div
-        className={`rounded-lg border border-border bg-muted/30 p-4 ${
-          compact ? 'text-sm' : ''
+        className={`rounded-lg border border-neutral-200 bg-neutral-50 p-4 ${
+          compact ? 'text-[14px]' : ''
         }`}
       >
-        <p className="text-muted-foreground mb-2">
+        <p className="text-neutral-black/60 mb-2">
           Thanks for letting us know.
         </p>
         <button
@@ -62,7 +62,7 @@ export function CareSuggestionCard({
             setFeedback(null)
             setFeedbackReason(null)
           }}
-          className="text-xs text-primary hover:underline"
+          className="text-[12px] text-brand-pink hover:underline"
         >
           Show suggestion
         </button>
@@ -72,27 +72,27 @@ export function CareSuggestionCard({
 
   return (
     <div
-      className={`rounded-lg border border-border bg-card p-4 sm:p-6 transition-all hover:shadow-sm ${
-        compact ? 'text-sm' : ''
+      className={`rounded-lg border border-neutral-200 bg-neutral-white p-4 sm:p-6 transition-all hover:shadow-sm ${
+        compact ? 'text-[14px]' : ''
       }`}
     >
       {/* Category badge */}
       <div className="mb-3 inline-block">
         <span
-          className={`px-2.5 py-1 rounded-full text-xs font-medium ${categoryColor}`}
+          className={`px-2.5 py-1 rounded-full text-[12px] font-medium ${categoryColor}`}
         >
           {categoryLabel}
         </span>
       </div>
 
       {/* Empathy line */}
-      <p className="text-muted-foreground text-sm mb-3 italic">
+      <p className="text-neutral-black/60 text-[14px] mb-3 italic">
         {suggestion.empathy}
       </p>
 
       {/* Main suggestion */}
-      <p className={`text-foreground font-medium mb-4 ${
-        compact ? '' : 'text-lg'
+      <p className={`text-neutral-black font-medium mb-4 ${
+        compact ? '' : 'text-[18px]'
       }`}>
         {suggestion.suggestion}
       </p>
@@ -101,7 +101,7 @@ export function CareSuggestionCard({
       <div>
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors mb-3"
+          className="flex items-center gap-2 text-[12px] text-neutral-black/60 hover:text-neutral-black transition-colors mb-3"
         >
           <span>Why this?</span>
           <ChevronDown
@@ -112,7 +112,7 @@ export function CareSuggestionCard({
         </button>
 
         {expanded && (
-          <p className="text-xs text-muted-foreground mb-4 pl-2 border-l border-border">
+          <p className="text-[12px] text-neutral-black/60 mb-4 pl-2 border-l border-neutral-200">
             {suggestion.reason}
           </p>
         )}
@@ -123,7 +123,7 @@ export function CareSuggestionCard({
         <div className="flex items-center gap-2 pt-2">
           <button
             onClick={() => handleFeedback(true)}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1 text-[12px] text-neutral-black/60 hover:text-neutral-black transition-colors"
             title="This suggestion is helpful"
           >
             <ThumbsUp className="h-4 w-4" />
@@ -131,7 +131,7 @@ export function CareSuggestionCard({
           </button>
           <button
             onClick={() => handleFeedback(false)}
-            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-destructive transition-colors"
+            className="flex items-center gap-1 text-[12px] text-neutral-black/60 hover:text-status-error transition-colors"
             title="Not for me"
           >
             <ThumbsDown className="h-4 w-4" />
@@ -142,20 +142,20 @@ export function CareSuggestionCard({
 
       {/* Negative feedback reason selection */}
       {feedback === false && !feedbackReason && (
-        <div className="border-t border-border pt-3 mt-3 space-y-2">
-          <p className="text-xs text-muted-foreground font-medium">
+        <div className="border-t border-neutral-200 pt-3 mt-3 space-y-2">
+          <p className="text-[12px] text-neutral-black/60 font-medium">
             Help us improve:
           </p>
           <div className="space-y-2">
             <button
               onClick={() => handleNegativeFeedback('not-relevant')}
-              className="block w-full text-left text-xs px-3 py-2 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              className="block w-full text-left text-[12px] px-3 py-2 rounded hover:bg-neutral-50 transition-colors text-neutral-black/60 hover:text-neutral-black"
             >
               Not relevant to me
             </button>
             <button
               onClick={() => handleNegativeFeedback('too-basic')}
-              className="block w-full text-left text-xs px-3 py-2 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              className="block w-full text-left text-[12px] px-3 py-2 rounded hover:bg-neutral-50 transition-colors text-neutral-black/60 hover:text-neutral-black"
             >
               Too basic
             </button>
@@ -163,7 +163,7 @@ export function CareSuggestionCard({
               onClick={() =>
                 handleNegativeFeedback('dont-want-category')
               }
-              className="block w-full text-left text-xs px-3 py-2 rounded hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              className="block w-full text-left text-[12px] px-3 py-2 rounded hover:bg-neutral-50 transition-colors text-neutral-black/60 hover:text-neutral-black"
             >
               Don't want this type
             </button>
@@ -173,8 +173,8 @@ export function CareSuggestionCard({
 
       {/* Positive feedback confirmation */}
       {feedback === true && (
-        <div className="border-t border-border pt-3 mt-3">
-          <p className="text-xs text-muted-foreground">
+        <div className="border-t border-neutral-200 pt-3 mt-3">
+          <p className="text-[12px] text-neutral-black/60">
             We'll remember that.
           </p>
         </div>

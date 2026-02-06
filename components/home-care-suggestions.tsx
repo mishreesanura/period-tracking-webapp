@@ -35,16 +35,16 @@ export function HomeCareSuggestions() {
     <section className="mb-16">
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-foreground mb-1">
+          <h2 className="text-[24px] font-semibold text-neutral-black mb-1">
             Today's care suggestions
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-[14px] text-neutral-black/60">
             Gentle ideas that might help.
           </p>
         </div>
         <Link
           href="/care"
-          className="text-sm font-medium text-primary hover:underline flex items-center gap-1"
+          className="text-[14px] font-medium text-brand-pink hover:underline flex items-center gap-1"
         >
           View all
           <ArrowRight className="h-4 w-4" />

@@ -1,5 +1,9 @@
 {
   "files.readonlyInclude": {
-    "**/*": true
+
+    "*/.tsx": false, // Adjust the file extension if necessary (e.g., .jsx, .ts, .js)
+    "*/.jsx": false,
+    "*/.ts": false,
+    "*/.js": false
   }
 }
