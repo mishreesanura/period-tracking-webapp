@@ -1,8 +1,15 @@
+'use client'
+
 import Link from 'next/link'
 import { Calendar, BookOpen, Heart, Activity, Droplet, Sparkles, Music, GraduationCap, Utensils, User, ArrowRight, BarChart3 } from 'lucide-react'
 import { HomeCareSuggestions } from '@/components/home-care-suggestions'
+import { motion, useReducedMotion } from 'framer-motion'
+
+const MotionLink = motion.create(Link)
 
 export default function HomePage() {
+  const shouldReduceMotion = useReducedMotion()
+
   const features = [
     // Row 1 (Core Daily Anchor)
     {
@@ -116,6 +123,7 @@ export default function HomePage() {
       case 'pink':
         return {
           cardBg: 'bg-[#FFF0F5]', // Lavender Blush
+          hoverBg: 'hover:bg-[#FCE7F3]', // pink-100
           border: 'border-[#FBCFE8]', // pink-200
           hoverBorder: 'hover:border-[#F472B6]', // pink-400
           iconBg: 'bg-white',
@@ -129,6 +137,7 @@ export default function HomePage() {
       case 'violet':
         return {
           cardBg: 'bg-[#F5F3FF]', // violet-50
+          hoverBg: 'hover:bg-[#EDE9FE]', // violet-100
           border: 'border-[#DDD6FE]', // violet-200
           hoverBorder: 'hover:border-[#A78BFA]', // violet-400
           iconBg: 'bg-white',
@@ -142,6 +151,7 @@ export default function HomePage() {
       case 'blue':
         return {
           cardBg: 'bg-[#EFF6FF]', // blue-50
+          hoverBg: 'hover:bg-[#DBEAFE]', // blue-100
           border: 'border-[#BFDBFE]', // blue-200
           hoverBorder: 'hover:border-[#60A5FA]', // blue-400
           iconBg: 'bg-white',
@@ -155,6 +165,7 @@ export default function HomePage() {
       default:
         return {
           cardBg: 'bg-neutral-50',
+          hoverBg: 'hover:bg-neutral-100',
           border: 'border-neutral-200',
           hoverBorder: 'hover:border-neutral-400',
           iconBg: 'bg-white',
@@ -166,6 +177,16 @@ export default function HomePage() {
           cta: 'text-neutral-900',
         }
     }
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+      },
+    },
   }
 
   return (
@@ -185,22 +206,68 @@ export default function HomePage() {
         <HomeCareSuggestions />
 
         {/* Feature Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-12 auto-rows-auto gap-6 mb-12">
-          {features.map((feature) => {
+        <motion.div 
+          className="grid grid-cols-1 md:grid-cols-12 auto-rows-auto gap-6 mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+        >
+          {features.map((feature, index) => {
             const Icon = feature.icon
             const styles = getThemeStyles(feature.theme)
+            
+            // Determine card type for animation logic
+            const isPeriodTracker = index === 0
+            const isProfile = index === features.length - 1
+            const isDaily = index >= 3 && index < features.length - 1 // Care suggestions to Learn
+            
+            // Task 1 & 2 & 4 & 5: Entrance Animation
+            const entranceDuration = isPeriodTracker ? 0.8 : (isDaily ? 0.45 : 0.6)
+            
+            // Profile starts from y=20, others y=16
+            const startY = isProfile ? 20 : 16
 
+            const cardVariants = {
+              hidden: { 
+                opacity: 0, 
+                y: shouldReduceMotion ? 0 : startY 
+              },
+              show: { 
+                opacity: 1, 
+                y: 0,
+                transition: {
+                   duration: entranceDuration,
+                   ease: "easeInOut"
+                }
+              }
+            }
+
+            // Task 2: Period Tracker specific hover (Arrow slide only, No lift/scale)
+            // Task 3: Secondary (color transition, arrow slide)
+            // Task 4: Daily (Border highlight, Icon fade)
+            
             return (
-              <Link
+              <MotionLink
                 key={feature.href}
                 href={feature.href}
-                className={`group relative overflow-hidden rounded-[24px] border ${styles.cardBg} ${styles.border} p-8 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${styles.hoverBorder} ${feature.className || 'col-span-12 md:col-span-4'}`}
+                variants={cardVariants}
+                // Determine whileHover behavior
+                whileHover="hover"
+                // Remove existing generic transform classes that conflict with motion like 'hover:-translate-y-1'
+                className={`group relative overflow-hidden rounded-[24px] border ${styles.cardBg} ${styles.border} p-8 transition-colors duration-300 ${isPeriodTracker ? '' : styles.hoverBg} ${styles.hoverBorder} ${feature.className || 'col-span-12 md:col-span-4'}`}
               >
+                {/* Task 2: Soft background glow for Period Tracker */}
+                {isPeriodTracker && (
+                  <div className="absolute inset-0 bg-gradient-to-br from-pink-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                )}
+
                 {/* Content */}
                 <div className="relative z-10 h-full flex flex-col justify-between">
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-4">
-                      <div className={`inline-block p-3 rounded-2xl shadow-sm ${styles.iconBg}`}>
+                      <div 
+                        className={`inline-block p-3 rounded-2xl shadow-sm ${styles.iconBg} transition-opacity duration-300 ${isDaily ? 'opacity-80 group-hover:opacity-100' : ''}`}
+                      >
                           <Icon className={`h-6 w-6 ${styles.iconColor}`} />
                       </div>
                       <span className={`text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-full ${styles.badgeBg} ${styles.badgeText}`}>
@@ -217,15 +284,22 @@ export default function HomePage() {
                   </div>
 
                   {/* CTA */}
-                  <div className={`flex items-center gap-2 text-[14px] font-bold ${styles.cta} group-hover:gap-3 transition-all pt-4`}>
+                  <div className={`flex items-center gap-2 text-[14px] font-bold ${styles.cta} pt-4`}>
                     Get started
-                    <ArrowRight className="h-4 w-4" />
+                    <motion.div
+                      variants={{
+                        hover: { x: shouldReduceMotion ? 0 : 4 }
+                      }}
+                      transition={{ duration: 0.3, ease: "easeOut" }}
+                    >
+                      <ArrowRight className="h-4 w-4" />
+                    </motion.div>
                   </div>
                 </div>
-              </Link>
+              </MotionLink>
             )
           })}
-        </div>
+        </motion.div>
 
         {/* Info Section */}
         <div className="rounded-lg border border-neutral-200 bg-neutral-50 p-8">
