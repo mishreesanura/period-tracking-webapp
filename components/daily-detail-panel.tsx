@@ -20,7 +20,7 @@ export interface DailyLogData {
 }
 
 interface DailyDetailPanelProps {
-  date: Date;
+  date: Date | null;
   onClose: () => void;
   onSave: (data: DailyLogData) => void;
   initialData?: DailyLogData;
@@ -43,6 +43,21 @@ export function DailyDetailPanel({
   );
   const [mood, setMood] = useState<string | null>(initialData?.mood ?? null);
   const [notes, setNotes] = useState(initialData?.notes ?? "");
+
+  // Handle empty state (no date selected)
+  if (!date) {
+    return (
+      <div className="h-full min-h-[400px] flex flex-col items-center justify-center p-8 bg-white border border-slate-100 rounded-[32px] text-center shadow-sm">
+        <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4 text-3xl">
+          👆
+        </div>
+        <h3 className="text-xl font-semibold text-slate-800 mb-2">Select a date</h3>
+        <p className="text-slate-500">
+          Click on any date in the calendar to view details or log your symptoms.
+        </p>
+      </div>
+    );
+  }
 
   const cycleStartDate = new Date("2024-12-15");
   const cycleData = calculateCyclePhase(date, cycleStartDate, 28, 5);

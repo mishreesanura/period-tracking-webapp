@@ -190,7 +190,7 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#FFFDFD] pt-12 pb-12 px-4 sm:px-6 lg:px-8 font-instrument">
+    <main className="min-h-screen pt-12 pb-12 px-4 sm:px-6 lg:px-8 font-instrument">
       <div className="mx-auto max-w-5xl">
         {/* Header */}
         <div className="mb-16 text-center">

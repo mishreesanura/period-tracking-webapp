@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${_geist.variable} ${instrumentSans.variable} font-sans antialiased bg-background text-foreground`} suppressHydrationWarning>
+      <body className={`${_geist.variable} ${instrumentSans.variable} font-sans antialiased bg-gradient-to-br from-[#F3E8FF] to-[#FCE7F3] min-h-screen bg-fixed text-foreground`} suppressHydrationWarning>
         <SidebarProvider>
           <AppSidebar />
           <SidebarInset>

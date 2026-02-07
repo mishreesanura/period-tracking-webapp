@@ -8,8 +8,8 @@ export const metadata = {
 
 export default function CalendarPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-rose-50/50 via-white to-slate-50">
+    <div className="h-full overflow-hidden">
       <CycleCalendar />
-    </main>
+    </div>
   );
 }

@@ -1,7 +1,9 @@
 'use client'
 
 import * as React from "react"
+import { useRef } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { Calendar, BookOpen, Home, Heart, Activity, Droplet, Sparkles, Music, Settings, GraduationCap, Utensils, User, BarChart3, Bell } from 'lucide-react'
 
@@ -69,18 +71,31 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" className="border-r border-border bg-white" {...props}>
       <SidebarHeader className="h-16 border-b border-border/50 flex flex-row items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 font-bold text-2xl text-neutral-900 tracking-tight group-data-[collapsible=icon]:hidden">
-          ऋतु
+        <Link href="/" className="flex items-center gap-2 group-data-[collapsible=icon]:hidden">
+           {/* Logo Image */}
+           <div className="relative h-10 w-32">
+              <Image 
+                src="/logo.jpeg" 
+                alt="Ritu Logo" 
+                fill
+                className="object-contain object-left"
+                priority
+              />
+           </div>
         </Link>
         <div className="group-data-[collapsible=icon]:hidden">
             <NotificationBell />
         </div>
-        {/* Helper for collapsed state showing just the logo initial or similar? 
-            Standard sidebar hides header usually in collapsed or shrinks it.
-            We will rely on standard behavior. If collapsed, text hides.
-        */}
-        <div className="hidden group-data-[collapsible=icon]:flex w-full items-center justify-center font-bold text-xl text-neutral-900">
-           ऋ
+        {/* Helper for collapsed state showing just the logo initial or similar? */}
+        <div className="hidden group-data-[collapsible=icon]:flex w-full items-center justify-center p-2">
+           <div className="relative h-8 w-8 rounded-md overflow-hidden">
+             <Image 
+               src="/logo.jpeg" 
+               alt="Ritu" 
+               fill
+               className="object-cover"
+             />
+           </div>
         </div>
       </SidebarHeader>
       
