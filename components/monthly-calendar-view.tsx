@@ -2,6 +2,7 @@
 
 import React from "react";
 import { getPhaseColor } from "@/lib/cycle-utils";
+import { formatDateKey } from "@/lib/utils";
 
 interface CycleDayData {
   date: Date;
@@ -134,7 +135,7 @@ export function MonthlyCalendarView({
       <div className="grid grid-cols-7 gap-2 lg:gap-3">
         {weeks.map((week, weekIndex) =>
           week.map((date, dayIndex) => {
-            const dateStr = date.toISOString().split("T")[0];
+            const dateStr = formatDateKey(date);
             const dayData = calendarData.get(dateStr);
             const inCurrentMonth = isCurrentMonth(date);
             const isCurrentDay = isToday(date);

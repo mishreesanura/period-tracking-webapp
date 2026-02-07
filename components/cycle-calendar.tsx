@@ -7,8 +7,9 @@ import { Card } from "@/components/ui/card";
 import { CycleLegende } from "./cycle-legend";
 import { MonthlyCalendarView } from "./monthly-calendar-view";
 import { WeeklyCalendarView } from "./weekly-calendar-view";
-import { DailyDetailPanel } from "./daily-detail-panel";
+import { DailyDetailPanel, type DailyLogData } from "./daily-detail-panel";
 import { calculateCyclePhase, type CycleData } from "@/lib/cycle-utils";
+import { formatDateKey } from "@/lib/utils";
 
 type CalendarView = "monthly" | "weekly";
 
@@ -19,9 +20,9 @@ interface CycleDayData {
   hasFlowLogged: boolean;
   hasSymptoms: boolean;
   hasNote: boolean;
-  flowLevel?: "light" | "medium" | "heavy";
+  flowLevel?: "light" | "medium" | "heavy" | null;
   symptoms?: string[];
-  mood?: string;
+  mood?: string | null;
   notes?: string;
 }
 
@@ -32,6 +33,19 @@ export function CycleCalendar() {
   const [cycleStartDate] = useState(new Date("2024-12-15"));
   const [cycleLengthDays] = useState(28);
   const [periodDurationDays] = useState(5);
+  const [userLogs, setUserLogs] = useState<Map<string, DailyLogData>>(
+    new Map(),
+  );
+
+  const handleSaveLog = (data: DailyLogData) => {
+    if (!selectedDate) return;
+    const dateStr = formatDateKey(selectedDate);
+    setUserLogs((prev) => {
+      const newLogs = new Map(prev);
+      newLogs.set(dateStr, data);
+      return newLogs;
+    });
+  };
 
   const calendarData = useMemo(() => {
     const data: Map<string, CycleDayData> = new Map();
@@ -46,33 +60,69 @@ export function CycleCalendar() {
       0,
     );
 
-    for (let i = startOfMonth.getDate(); i <= endOfMonth.getDate(); i++) {
-      const date = new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth(),
-        i,
-      );
-      const dateStr = date.toISOString().split("T")[0];
+    // We need to generate data for a bit more than just the month to cover weekly view transitions
+    // Taking 1 week before and 1 week after to be safe (simplified here to just month for now,
+    // but the views usually request their own range.
+    // Ideally, calendarData should be generated based on the view's needs,
+    // or we generate a larger range here.)
+    // For now, let's stick to the current month logic but expanding the loop might be safer
+    // if the view asks for days outside this month.
+    // However, the views receive `calendarData` which is a Map.
+    // Let's generate for the whole displayed grid range effectively.
 
-      const cycleData = calculateCyclePhase(
+    // Actually, let's just generate for the current month +/- some buffer
+    // Or better, since `WeeklyView` and `MonthlyView` compute their own dates,
+    // lets ensure we populate the Map for any date likely to be requested.
+
+    // Quick fix: loop from 15 days before start to 15 days after end of month
+    const rangeStart = new Date(startOfMonth);
+    rangeStart.setDate(rangeStart.getDate() - 15);
+    const rangeEnd = new Date(endOfMonth);
+    rangeEnd.setDate(rangeEnd.getDate() + 15);
+
+    for (
+      let d = new Date(rangeStart);
+      d <= rangeEnd;
+      d.setDate(d.getDate() + 1)
+    ) {
+      const date = new Date(d);
+      const dateStr = formatDateKey(date);
+
+      const log = userLogs.get(dateStr);
+      let cycleData = calculateCyclePhase(
         date,
         cycleStartDate,
         cycleLengthDays,
         periodDurationDays,
       );
 
+      // Override with user log if available
+      if (log?.isPeriod) {
+        cycleData = { ...cycleData, phase: "period", isPredicted: false };
+      }
+
       data.set(dateStr, {
         date,
         phase: cycleData.phase,
         isPredicted: cycleData.isPredicted,
-        hasFlowLogged: false,
-        hasSymptoms: false,
-        hasNote: false,
+        hasFlowLogged: !!log?.flowLevel,
+        hasSymptoms: (log?.symptoms?.length ?? 0) > 0,
+        hasNote: !!log?.notes,
+        flowLevel: log?.flowLevel,
+        symptoms: log?.symptoms,
+        mood: log?.mood,
+        notes: log?.notes,
       });
     }
 
     return data;
-  }, [currentMonth, cycleStartDate, cycleLengthDays, periodDurationDays]);
+  }, [
+    currentMonth,
+    cycleStartDate,
+    cycleLengthDays,
+    periodDurationDays,
+    userLogs,
+  ]);
 
   const today = new Date();
   const daysDiff = Math.ceil(
@@ -215,6 +265,8 @@ export function CycleCalendar() {
         <DailyDetailPanel
           date={selectedDate}
           onClose={() => setSelectedDate(null)}
+          onSave={handleSaveLog}
+          initialData={userLogs.get(formatDateKey(selectedDate))}
         />
       )}
     </div>

@@ -3,39 +3,36 @@ import type {
   CyclePhase,
   TimeOfDay,
   SuggestionCategory,
-} from './care-types'
+} from "./care-types";
 
 export function getTimeOfDay(): TimeOfDay {
-  const hour = new Date().getHours()
-  if (hour < 12) return 'morning'
-  if (hour < 17) return 'afternoon'
-  return 'evening'
+  const hour = new Date().getHours();
+  if (hour < 12) return "morning";
+  if (hour < 17) return "afternoon";
+  return "evening";
 }
 
-export function getCategoryColor(
-  category: SuggestionCategory,
-): string {
+export function getCategoryColor(category: SuggestionCategory): string {
   const colors: Record<SuggestionCategory, string> = {
-    'emotional-care': 'bg-purple-50 border-purple-200 text-purple-900',
-    'nutrition': 'bg-green-50 border-green-200 text-green-900',
-    'physical-care': 'bg-blue-50 border-blue-200 text-blue-900',
-    'rest': 'bg-indigo-50 border-indigo-200 text-indigo-900',
-    'mental-checkin': 'bg-pink-50 border-pink-200 text-pink-900',
-  }
-  return colors[category]
+    // Pink/Purple/Pastel Theme
+    "emotional-care": "bg-purple-50 border-purple-100 text-purple-700",
+    nutrition: "bg-pink-50 border-pink-100 text-pink-700",
+    "physical-care": "bg-rose-50 border-rose-100 text-rose-700",
+    rest: "bg-fuchsia-50 border-fuchsia-100 text-fuchsia-700",
+    "mental-checkin": "bg-violet-50 border-violet-100 text-violet-700",
+  };
+  return colors[category];
 }
 
-export function getCategoryLabel(
-  category: SuggestionCategory,
-): string {
+export function getCategoryLabel(category: SuggestionCategory): string {
   const labels: Record<SuggestionCategory, string> = {
-    'emotional-care': 'Emotional Care',
-    'nutrition': 'Nutrition & Hydration',
-    'physical-care': 'Physical Care',
-    'rest': 'Rest & Sleep',
-    'mental-checkin': 'Mental Check-in',
-  }
-  return labels[category]
+    "emotional-care": "Emotional Care",
+    nutrition: "Nutrition & Hydration",
+    "physical-care": "Physical Care",
+    rest: "Rest & Sleep",
+    "mental-checkin": "Mental Check-in",
+  };
+  return labels[category];
 }
 
 export function getCyclePhaseSuggestions(
@@ -43,395 +40,361 @@ export function getCyclePhaseSuggestions(
   timeOfDay: TimeOfDay,
 ): CareSuggestion[] {
   // Period phase - focus on rest and comfort
-  if (phase === 'period') {
-    if (timeOfDay === 'morning') {
+  if (phase === "period") {
+    if (timeOfDay === "morning") {
       return [
         {
-          id: 'period-morning-1',
-          category: 'emotional-care',
-          empathy:
-            'Starting the day during your period can feel heavy. Here\'s something gentle:',
+          id: "period-morning-1",
+          category: "emotional-care",
+          empathy: "Starting the day during your period can feel heavy.",
           suggestion:
-            'Give yourself permission to move slowly today. No rushing.',
+            "Give yourself permission to move slowly today. No rushing.",
           reason:
-            'Your body is in a natural renewal phase. Gentle pacing honors that.',
-          timeOfDay: 'morning',
-          cyclePhase: 'period',
+            "Your body is in a natural renewal phase. Gentle pacing honors that.",
+          timeOfDay: "morning",
+          cyclePhase: "period",
           createdAt: new Date(),
         },
         {
-          id: 'period-morning-2',
-          category: 'nutrition',
-          empathy:
-            'Nourishing yourself well during this time matters.',
+          id: "period-morning-2",
+          category: "nutrition",
+          empathy: "Nourishing yourself well matters right now.",
           suggestion:
-            'Have something warm and iron-rich when you can—warm oats, lentil soup, or scrambled eggs.',
-          reason:
-            'Your body needs extra care. Iron-rich foods can help with energy.',
-          timeOfDay: 'morning',
-          cyclePhase: 'period',
+            "Try warm oats, lentil soup, or scrambled eggs with spinach.",
+          reason: "Iron-rich foods help replenish your energy stores.",
+          timeOfDay: "morning",
+          cyclePhase: "period",
           createdAt: new Date(),
         },
         {
-          id: 'period-morning-3',
-          category: 'rest',
-          empathy:
-            'Sleep might feel different right now.',
+          id: "period-morning-3",
+          category: "rest",
+          empathy: "Sleep might feel different right now.",
           suggestion:
-            'If you need more rest than usual, that\'s completely normal. Honor it.',
+            "If you need an extra 20 minutes of rest, take it without guilt.",
           reason:
-            'Your body is doing important work. More sleep is a feature, not a flaw.',
-          timeOfDay: 'morning',
-          cyclePhase: 'period',
+            "Your body is doing hard work internally. Rest is productive.",
+          timeOfDay: "morning",
+          cyclePhase: "period",
           createdAt: new Date(),
         },
-      ]
+        {
+          id: "period-morning-4",
+          category: "physical-care",
+          empathy: "Movement might feel distant.",
+          suggestion:
+            "A gentle forward fold or child’s pose can release lower back tension.",
+          reason: "Gentle compression helps soothe cramping and bloating.",
+          timeOfDay: "morning",
+          cyclePhase: "period",
+          createdAt: new Date(),
+        },
+        {
+          id: "period-morning-5",
+          category: "nutrition",
+          empathy: "Hydration feels boring but helps.",
+          suggestion:
+            "Warm water with lemon or ginger tea is gentler than cold water.",
+          reason:
+            "Warm liquids aid circulation and can ease abdominal tightness.",
+          timeOfDay: "morning",
+          cyclePhase: "period",
+          createdAt: new Date(),
+        },
+        {
+          id: "period-morning-6",
+          category: "mental-checkin",
+          empathy: "Brain fog is common today.",
+          suggestion: "Simplify your to-do list. Pick just top 3 priorities.",
+          reason: "Lowering cognitive load reduces stress hormones.",
+          timeOfDay: "morning",
+          cyclePhase: "period",
+          createdAt: new Date(),
+        },
+      ];
     }
 
-    if (timeOfDay === 'afternoon') {
+    if (timeOfDay === "afternoon") {
       return [
         {
-          id: 'period-afternoon-1',
-          category: 'physical-care',
-          empathy:
-            'How\'s your energy mid-day?',
-          suggestion:
-            'A slow walk or gentle stretching might ease any discomfort.',
-          reason:
-            'Movement can help with cramping without pushing yourself.',
-          timeOfDay: 'afternoon',
-          cyclePhase: 'period',
+          id: "period-afternoon-1",
+          category: "physical-care",
+          empathy: "Energy often dips in the afternoon.",
+          suggestion: "A slow walk outside or just standing in sunlight helps.",
+          reason: "Natural light regulates mood even when energy is low.",
+          timeOfDay: "afternoon",
+          cyclePhase: "period",
           createdAt: new Date(),
         },
         {
-          id: 'period-afternoon-2',
-          category: 'nutrition',
-          empathy: 'Keep hydrating gently.',
-          suggestion:
-            'Drink some water or herbal tea. Warmth can help.',
-          reason:
-            'Staying hydrated supports your body during this time.',
-          timeOfDay: 'afternoon',
-          cyclePhase: 'period',
-          createdAt: new Date(),
-        },
-      ]
-    }
-
-    // evening
-    return [
-      {
-        id: 'period-evening-1',
-        category: 'rest',
-        empathy: 'Evening is your time to wind down.',
-        suggestion:
-          'Create a cozy space. Soft blanket, warm drink, something that feels safe.',
-        reason:
-          'Rest and comfort aren\'t luxuries during your period. They\'re essential.',
-        timeOfDay: 'evening',
-        cyclePhase: 'period',
-        createdAt: new Date(),
-      },
-      {
-        id: 'period-evening-2',
-        category: 'mental-checkin',
-        empathy: 'How are you feeling emotionally?',
-        suggestion:
-          'Take a few minutes to check in with yourself. No judgment, just honesty.',
-        reason:
-          'You deserve to know how you\'re actually feeling.',
-        timeOfDay: 'evening',
-        cyclePhase: 'period',
-        createdAt: new Date(),
-      },
-    ]
-  }
-
-  // Follicular phase - gentle energy building
-  if (phase === 'follicular') {
-    if (timeOfDay === 'morning') {
-      return [
-        {
-          id: 'follicular-morning-1',
-          category: 'emotional-care',
-          empathy:
-            'This phase often brings a sense of renewal.',
-          suggestion:
-            'If you\'re feeling a bit more energy, that\'s real. Honor it gently.',
-          reason:
-            'Your body is rebuilding. Gentle curiosity about what you want is good.',
-          timeOfDay: 'morning',
-          cyclePhase: 'follicular',
-          createdAt: new Date(),
-        },
-      ]
-    }
-
-    if (timeOfDay === 'afternoon') {
-      return [
-        {
-          id: 'follicular-afternoon-1',
-          category: 'physical-care',
-          empathy:
-            'You might feel ready for gentle activity.',
-          suggestion:
-            'A walk, yoga, or whatever movement feels good—listen to your body.',
-          reason:
-            'This phase is often more forgiving for movement.',
-          timeOfDay: 'afternoon',
-          cyclePhase: 'follicular',
-          createdAt: new Date(),
-        },
-      ]
-    }
-
-    return [
-      {
-        id: 'follicular-evening-1',
-        category: 'nutrition',
-        empathy: 'Nourishing yourself well supports this phase.',
-        suggestion:
-          'Fresh vegetables, lean proteins, and foods you actually enjoy.',
-        reason:
-          'Your body is rebuilding. Good nutrition matters now.',
-        timeOfDay: 'evening',
-        cyclePhase: 'follicular',
-        createdAt: new Date(),
-      },
-    ]
-  }
-
-  // Ovulation phase - energy and connection
-  if (phase === 'ovulation') {
-    if (timeOfDay === 'morning') {
-      return [
-        {
-          id: 'ovulation-morning-1',
-          category: 'emotional-care',
-          empathy:
-            'This phase often brings clarity and social energy.',
-          suggestion:
-            'If you\'re feeling chatty or social, that\'s not random. It\'s biology.',
-          reason:
-            'Your body naturally opens up during ovulation. Let it.',
-          timeOfDay: 'morning',
-          cyclePhase: 'ovulation',
-          createdAt: new Date(),
-        },
-      ]
-    }
-
-    if (timeOfDay === 'afternoon') {
-      return [
-        {
-          id: 'ovulation-afternoon-1',
-          category: 'physical-care',
-          empathy:
-            'Energy is usually higher now.',
-          suggestion:
-            'If it feels right, try a more challenging workout or activity.',
-          reason:
-            'Your body can handle more intensity during this window.',
-          timeOfDay: 'afternoon',
-          cyclePhase: 'ovulation',
-          createdAt: new Date(),
-        },
-      ]
-    }
-
-    return [
-      {
-        id: 'ovulation-evening-1',
-        category: 'emotional-care',
-        empathy:
-          'Connection matters to you right now.',
-        suggestion:
-          'If you can, spend time with people you care about. Even a text counts.',
-        reason:
-          'This phase naturally draws us toward connection.',
-        timeOfDay: 'evening',
-        cyclePhase: 'ovulation',
-        createdAt: new Date(),
-      },
-    ]
-  }
-
-  // Luteal/PMS phase - protection and ease
-  if (phase === 'luteal-pms') {
-    if (timeOfDay === 'morning') {
-      return [
-        {
-          id: 'luteal-morning-1',
-          category: 'emotional-care',
-          empathy:
-            'PMS can amplify emotions. That\'s normal.',
-          suggestion:
-            'Be extra gentle with yourself today. Your nervous system is more sensitive.',
-          reason:
-            'Hormonal shifts are real. Protecting your peace matters.',
-          timeOfDay: 'morning',
-          cyclePhase: 'luteal-pms',
+          id: "period-afternoon-2",
+          category: "nutrition",
+          empathy: "Cravings might be showing up.",
+          suggestion: "Dark chocolate (70%+) serves both craving and need.",
+          reason: "Magnesium in chocolate helps relax muscles naturally.",
+          timeOfDay: "afternoon",
+          cyclePhase: "period",
           createdAt: new Date(),
         },
         {
-          id: 'luteal-morning-2',
-          category: 'nutrition',
-          empathy: 'Your body needs specific support now.',
+          id: "period-afternoon-3",
+          category: "emotional-care",
+          empathy: "Feeling sensitive isn’t a weakness.",
           suggestion:
-            'Eat more calcium, magnesium-rich foods, and B vitamins. Think leafy greens, nuts, whole grains.',
+            "Wrap up in a blanket or wear your most comfortable sweater.",
           reason:
-            'These nutrients help ease PMS symptoms naturally.',
-          timeOfDay: 'morning',
-          cyclePhase: 'luteal-pms',
+            "Physical warmth and softness signal safety to the nervous system.",
+          timeOfDay: "afternoon",
+          cyclePhase: "period",
           createdAt: new Date(),
         },
-      ]
-    }
-
-    if (timeOfDay === 'afternoon') {
-      return [
         {
-          id: 'luteal-afternoon-1',
-          category: 'rest',
-          empathy:
-            'Fatigue might be hitting harder right now.',
+          id: "period-afternoon-4",
+          category: "rest",
+          empathy: "Your body is working overtime.",
           suggestion:
-            'A short rest or quiet time is not laziness. It\'s necessary.',
-          reason:
-            'Your energy dips in this phase. Honoring that is self-care.',
-          timeOfDay: 'afternoon',
-          cyclePhase: 'luteal-pms',
+            "Lie down for 10 minutes with legs up the wall if possible.",
+          reason: "This restores circulation and rests the lower back.",
+          timeOfDay: "afternoon",
+          cyclePhase: "period",
           createdAt: new Date(),
         },
-      ]
+      ];
     }
 
     // evening
     return [
       {
-        id: 'luteal-evening-1',
-        category: 'mental-checkin',
-        empathy:
-          'Your internal world might feel louder right now.',
-        suggestion:
-          'Journal, sit quietly, or just notice what\'s coming up. No fixing required.',
+        id: "period-evening-1",
+        category: "rest",
+        empathy: "Evening is for deep restoration.",
+        suggestion: 'Create a "nest" tonight—pillows, blankets, low light.',
         reason:
-          'This phase gifts you clarity. Listen to it.',
-        timeOfDay: 'evening',
-        cyclePhase: 'luteal-pms',
+          "Rest isn’t a luxury during your period; it’s a biological need.",
+        timeOfDay: "evening",
+        cyclePhase: "period",
         createdAt: new Date(),
       },
       {
-        id: 'luteal-evening-2',
-        category: 'rest',
-        empathy: 'Wind down mindfully.',
-        suggestion:
-          'Create boundaries around your evening. Protect sleep time.',
-        reason:
-          'Good rest now prevents tomorrow\'s overwhelm.',
-        timeOfDay: 'evening',
-        cyclePhase: 'luteal-pms',
+        id: "period-evening-2",
+        category: "mental-checkin",
+        empathy: "Emotions may surface in the quiet.",
+        suggestion: "Journal one thing your body needs from you right now.",
+        reason: "Listening builds trust with your own body.",
+        timeOfDay: "evening",
+        cyclePhase: "period",
         createdAt: new Date(),
       },
-    ]
+      {
+        id: "period-evening-3",
+        category: "nutrition",
+        empathy: "Comfort is key before bed.",
+        suggestion: "Magnesium tea or warm golden milk.",
+        reason: "Promotes deeper sleep and relaxes uterine muscles.",
+        timeOfDay: "evening",
+        cyclePhase: "period",
+        createdAt: new Date(),
+      },
+      {
+        id: "period-evening-4",
+        category: "emotional-care",
+        empathy: "Be gentle with your expectations.",
+        suggestion: "Cancel plans if you need to. Saying no is self-care.",
+        reason: "Protecting your energy now leads to better energy later.",
+        timeOfDay: "evening",
+        cyclePhase: "period",
+        createdAt: new Date(),
+      },
+    ];
   }
 
-  // Default suggestions if phase is unknown
+  // Follicular, Ovulation, Luteal logic could go here, but focusing on DEFAULT/UNKNOWN
+  // as per current usage to allow "many" to show up regardless of cycle tracking depth
+
+  if (timeOfDay === "morning") {
+    return [
+      {
+        id: "default-morning-1",
+        category: "emotional-care",
+        empathy: "Mornings set the tone, but they don’t have to be perfect.",
+        suggestion: "Before scrolling, take three deep breaths. Just three.",
+        reason: "This disrupts the cortisol spike of waking up.",
+        timeOfDay: "morning",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-morning-2",
+        category: "nutrition",
+        empathy: "Your brain needs fuel to regulate emotions.",
+        suggestion: "Add a protein to your breakfast—eggs, yogurt, or nuts.",
+        reason: "Protein stabilizes blood sugar, preventing mood swings later.",
+        timeOfDay: "morning",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-morning-3",
+        category: "physical-care",
+        empathy: "Stiffness is normal after sleep.",
+        suggestion: "A big overhead stretch, reaching for the ceiling.",
+        reason: 'Expands the ribcage and signals "awake" to your body.',
+        timeOfDay: "morning",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-morning-4",
+        category: "mental-checkin",
+        empathy: "The to-do list might feel loud.",
+        suggestion:
+          'Ask yourself: "What is one thing that would make today feel successful?"',
+        reason: "Focusing on one win reduces overwhelm immediately.",
+        timeOfDay: "morning",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-morning-5",
+        category: "nutrition",
+        empathy: "Hydration wakes up your brain.",
+        suggestion: "Drink a full glass of water before your coffee or tea.",
+        reason: "Rehydrating tissues improves cognitive function instantly.",
+        timeOfDay: "morning",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-morning-6",
+        category: "rest",
+        empathy: "You don’t have to rush immediately.",
+        suggestion:
+          "Take 2 minutes to just sit with your coffee/tea without a screen.",
+        reason: 'Savoring creates a "micro-rest" moment before the day starts.',
+        timeOfDay: "morning",
+        createdAt: new Date(),
+      },
+    ];
+  }
+
+  if (timeOfDay === "afternoon") {
+    return [
+      {
+        id: "default-afternoon-1",
+        category: "physical-care",
+        empathy: "The afternoon slump is a biological rhythm, not laziness.",
+        suggestion:
+          "Stand up and shake out your hands and feet for 30 seconds.",
+        reason: "Physical movement resets your nervous system state.",
+        timeOfDay: "afternoon",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-afternoon-2",
+        category: "nutrition",
+        empathy: "Energy flagging?",
+        suggestion: "Grab a handful of almonds or a piece of fruit.",
+        reason: "Fiber and fat provide slow-burning fuel compared to sugar.",
+        timeOfDay: "afternoon",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-afternoon-3",
+        category: "emotional-care",
+        empathy: "Work or tasks can accumulate stress.",
+        suggestion:
+          "Look out a window at something growing/green for 60 seconds.",
+        reason: '"Soft attention" on nature lowers blood pressure.',
+        timeOfDay: "afternoon",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-afternoon-4",
+        category: "mental-checkin",
+        empathy: "Feeling overwhelmed?",
+        suggestion:
+          "Do a brain dump. Write down everything looping in your head.",
+        reason: "Externalizing thoughts frees up working memory.",
+        timeOfDay: "afternoon",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-afternoon-5",
+        category: "nutrition",
+        empathy: "Thirst often masquerades as fatigue.",
+        suggestion:
+          "Refill your water bottle. Add cucumber or lemon if it helps.",
+        reason: "Even mild dehydration cause significant fatigue.",
+        timeOfDay: "afternoon",
+        createdAt: new Date(),
+      },
+      {
+        id: "default-afternoon-6",
+        category: "rest",
+        empathy: "Eyes getting tired?",
+        suggestion: "Look at a point 20 feet away for 20 seconds.",
+        reason: "Relieves eye strain from screens (20-20-20 rule).",
+        timeOfDay: "afternoon",
+        createdAt: new Date(),
+      },
+    ];
+  }
+
+  // Evening
   return [
     {
-      id: 'default-1',
-      category: 'emotional-care',
-      empathy: 'Take a moment for yourself today.',
+      id: "default-evening-1",
+      category: "rest",
+      empathy: 'Transitioning from "doing" to "being" is hard.',
       suggestion:
-        'Five minutes of quiet can reset your nervous system.',
-      reason: 'You deserve to check in with how you\'re really feeling.',
+        "Change into comfortable clothes immediately upon finishing tasks.",
+      reason: "It’s a physical signal to your brain that work is done.",
+      timeOfDay: "evening",
       createdAt: new Date(),
     },
     {
-      id: 'default-2',
-      category: 'nutrition',
-      empathy: 'Nourish yourself well.',
-      suggestion:
-        'Eat something that both fills you and feels good.',
-      reason: 'Food is more than fuel. It\'s an act of self-care.',
+      id: "default-evening-2",
+      category: "mental-checkin",
+      empathy: "The day is done.",
+      suggestion: "Acknowledge one hard thing you got through today.",
+      reason: "Validation helps close the stress cycle.",
+      timeOfDay: "evening",
       createdAt: new Date(),
     },
-  ]
+    {
+      id: "default-evening-3",
+      category: "nutrition",
+      empathy: "Support your sleep system.",
+      suggestion: "Finish eating 2-3 hours before bed if possible.",
+      reason: "Digestion can interfere with deep sleep cycles.",
+      timeOfDay: "evening",
+      createdAt: new Date(),
+    },
+    {
+      id: "default-evening-4",
+      category: "emotional-care",
+      empathy: "Connect with comfort.",
+      suggestion: "Read a few pages of a book (real paper, not screen).",
+      reason: "It engages the imagination without blue light exposure.",
+      timeOfDay: "evening",
+      createdAt: new Date(),
+    },
+    {
+      id: "default-evening-5",
+      category: "physical-care",
+      empathy: "Release the day’s tension.",
+      suggestion: "Gentle neck rolls or jaw release exercises.",
+      reason: "We hold unconscious stress in the jaw and shoulders.",
+      timeOfDay: "evening",
+      createdAt: new Date(),
+    },
+    {
+      id: "default-evening-6",
+      category: "rest",
+      empathy: "Prepare your environment.",
+      suggestion: "Dim the lights in your living room an hour before bed.",
+      reason: "Simulates sunset and triggers melatonin production.",
+      timeOfDay: "evening",
+      createdAt: new Date(),
+    },
+  ];
 }
 
-export function getDefaultSuggestions(
-  timeOfDay: TimeOfDay,
-): CareSuggestion[] {
-  if (timeOfDay === 'morning') {
-    return [
-      {
-        id: 'default-morning-1',
-        category: 'emotional-care',
-        empathy: 'Starting the day deserves intention.',
-        suggestion:
-          'Set one small intention for today. Just one.',
-        reason: 'Clarity early makes the day easier.',
-        timeOfDay: 'morning',
-        createdAt: new Date(),
-      },
-      {
-        id: 'default-morning-2',
-        category: 'nutrition',
-        empathy: 'Your morning sets the tone.',
-        suggestion:
-          'Eat something nourishing. Doesn\'t have to be perfect.',
-        reason: 'Stable blood sugar helps everything else.',
-        timeOfDay: 'morning',
-        createdAt: new Date(),
-      },
-    ]
-  }
-
-  if (timeOfDay === 'afternoon') {
-    return [
-      {
-        id: 'default-afternoon-1',
-        category: 'physical-care',
-        empathy: 'Mid-day slump is real.',
-        suggestion:
-          'A 5-minute stretch or short walk can shift your energy.',
-        reason: 'Movement interrupts fatigue.',
-        timeOfDay: 'afternoon',
-        createdAt: new Date(),
-      },
-      {
-        id: 'default-afternoon-2',
-        category: 'nutrition',
-        empathy: 'Keep yourself steady.',
-        suggestion: 'Hydrate. Have a snack with protein.',
-        reason: 'Sustained energy prevents crashes.',
-        timeOfDay: 'afternoon',
-        createdAt: new Date(),
-      },
-    ]
-  }
-
-  // evening
-  return [
-    {
-      id: 'default-evening-1',
-      category: 'rest',
-      empathy: 'Evening is for unwinding.',
-      suggestion:
-        'Step away from screens 30 minutes before bed if you can.',
-      reason: 'Your nervous system needs a real transition to rest.',
-      timeOfDay: 'evening',
-      createdAt: new Date(),
-    },
-    {
-      id: 'default-evening-2',
-      category: 'mental-checkin',
-      empathy: 'Reflection matters.',
-      suggestion:
-        'One thing you did okay today. Just one. That counts.',
-      reason: 'Self-compassion helps you rest easier.',
-      timeOfDay: 'evening',
-      createdAt: new Date(),
-    },
-  ]
+export function getDefaultSuggestions(timeOfDay: TimeOfDay): CareSuggestion[] {
+  return getCyclePhaseSuggestions("unknown", timeOfDay);
 }

@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { formatDateKey } from "@/lib/utils";
 
 interface CycleDayData {
   date: Date;
@@ -28,6 +29,7 @@ const getPhaseStyle = (phase: string, isPredicted: boolean) => {
 
   if (isPredicted) {
     switch (phase) {
+      case "period":
       case "menstrual":
         return `${baseStyle} bg-rose-50 text-rose-400 border-2 border-dashed border-rose-200`;
       case "ovulation":
@@ -39,6 +41,7 @@ const getPhaseStyle = (phase: string, isPredicted: boolean) => {
 
   // Actual logged/confirmed phases
   switch (phase) {
+    case "period":
     case "menstrual":
       return `${baseStyle} bg-rose-200 text-rose-800 shadow-sm hover:bg-rose-300`;
     case "ovulation":
@@ -138,7 +141,7 @@ export function WeeklyCalendarView({
 
       <div className="grid grid-cols-7 gap-2 lg:gap-3">
         {weekDates.map((date, index) => {
-          const dateStr = date.toISOString().split("T")[0];
+          const dateStr = formatDateKey(date);
           const dayData = calendarData.get(dateStr);
           const isCurrentDay = isToday(date);
           const isSelectedDay = isSelected(date);

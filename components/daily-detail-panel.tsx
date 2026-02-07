@@ -117,8 +117,9 @@ export function DailyDetailPanel({
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => handlePeriodToggle(!isPeriodDay)}
-                className={`relative w-12 h-7 rounded-full transition-all duration-300 ${isPeriodDay ? "bg-rose-600" : "bg-slate-200"}`}
+                className={`relative w-12 h-7 rounded-full transition-all duration-300 cursor-pointer ${isPeriodDay ? "bg-rose-600" : "bg-slate-200"}`}
               >
                 <div
                   className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full shadow-sm transition-all duration-300 ${isPeriodDay ? "translate-x-5" : "translate-x-0"}`}
@@ -134,9 +135,10 @@ export function DailyDetailPanel({
                 {(["light", "medium", "heavy"] as const).map((level) => (
                   <button
                     key={level}
+                    type="button"
                     onClick={() => setFlowLevel(level)}
                     className={`
-                        flex-1 py-2 px-2 rounded-xl text-xs font-semibold uppercase tracking-wide
+                        flex-1 py-2 px-2 rounded-xl text-xs font-semibold uppercase tracking-wide cursor-pointer
                         transition-all duration-200 border
                         ${
                           flowLevel === level
@@ -161,9 +163,10 @@ export function DailyDetailPanel({
               {symptoms.map((symptom) => (
                 <button
                   key={symptom}
+                  type="button"
                   onClick={() => toggleSymptom(symptom)}
                   className={`
-                    py-2 px-3.5 rounded-full text-xs font-medium 
+                    py-2 px-3.5 rounded-full text-xs font-medium cursor-pointer
                     transition-all duration-200 border
                     ${
                       selectedSymptoms.includes(symptom)
@@ -187,11 +190,12 @@ export function DailyDetailPanel({
               {moods.map((moodOption) => (
                 <button
                   key={moodOption}
+                  type="button"
                   onClick={() =>
                     setMood(mood === moodOption ? null : moodOption)
                   }
                   className={`
-                    py-2 px-3.5 rounded-full text-xs font-medium 
+                    py-2 px-3.5 rounded-full text-xs font-medium cursor-pointer
                     transition-all duration-200 border
                     ${
                       mood === moodOption
@@ -219,25 +223,26 @@ export function DailyDetailPanel({
               rows={3}
             />
           </div>
+        </div>
 
-          {/* Save Button */}
-          <div className="pt-2">
-            <Button
-              onClick={() => {
-                onSave({
-                  isPeriod: isPeriodDay,
-                  flowLevel,
-                  symptoms: selectedSymptoms,
-                  mood,
-                  notes,
-                });
-                onClose();
-              }}
-              className="w-full bg-rose-700 text-white hover:bg-rose-800 rounded-xl py-6 shadow-xl shadow-rose-200 transition-all font-semibold tracking-wide text-sm"
-            >
-              Save Entry
-            </Button>
-          </div>
+        {/* Save Button - Fixed at bottom */}
+        <div className="p-6 pt-2 bg-white border-t border-slate-50 mt-auto">
+          <Button
+            type="button"
+            onClick={() => {
+              onSave({
+                isPeriod: isPeriodDay,
+                flowLevel,
+                symptoms: selectedSymptoms,
+                mood,
+                notes,
+              });
+              onClose();
+            }}
+            className="w-full bg-rose-700 text-white hover:bg-rose-800 rounded-xl py-6 shadow-xl shadow-rose-200 transition-all font-semibold tracking-wide text-sm cursor-pointer active:scale-95"
+          >
+            Save Entry
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -3,154 +3,136 @@ import {
   generateAIInsights,
   assessRiskSignals,
   assessPCOSPatterns,
-} from '@/lib/insights-utils'
-import { InsightsCycleStability } from '@/components/insights-cycle-stability'
-import { InsightsSymptomFrequency } from '@/components/insights-symptom-frequency'
-import { InsightsMoodOverlay } from '@/components/insights-mood-overlay'
-import { InsightsAIInsightCard } from '@/components/insights-ai-insight-card'
-import { InsightsRiskSignals } from '@/components/insights-risk-signals'
-import { InsightsPCOSModule } from '@/components/insights-pcos-module'
-import { InsightsDoctorExport } from '@/components/insights-doctor-export'
+} from "@/lib/insights-utils";
+import { CycleSnapshotTile } from "@/components/bento/cycle-snapshot-tile";
+import { PatternStabilityTile } from "@/components/bento/pattern-stability-tile";
+import { AlertHighlightTile } from "@/components/bento/alert-highlight-tile";
+import { SymptomBarChartTile } from "@/components/bento/symptom-bar-chart-tile";
+import { MoodCorrelationTile } from "@/components/bento/mood-correlation-tile";
+import { CyclePhaseRingTile } from "@/components/bento/cycle-phase-ring-tile";
+import { AIInsightsSummaryTile } from "@/components/bento/ai-insights-summary-tile";
+import { PatternAwarenessTile } from "@/components/bento/pattern-awareness-tile";
+import { OverallStatusTile } from "@/components/bento/overall-status-tile";
+import { Sparkles, Download } from "lucide-react";
 
 export const metadata = {
-  title: 'Health Insights | My Cycle',
-  description: 'Pattern awareness, AI insights, and condition-awareness for your cycle health.',
-}
+  title: "Health Insights | My Cycle",
+  description:
+    "Pattern awareness, AI insights, and condition-awareness for your cycle health.",
+};
 
 export default function InsightsPage() {
-  // Generate mock data - in production, this would come from user data
-  const patternData = generateMockPatternData()
-  const aiInsights = generateAIInsights(patternData)
-  const riskSignal = assessRiskSignals(patternData)
-  const pcosAwareness = assessPCOSPatterns(patternData, 5) // 5 cycles tracked
+  const patternData = generateMockPatternData();
+  const aiInsights = generateAIInsights(patternData);
+  const riskSignal = assessRiskSignals(patternData);
+  const pcosAwareness = assessPCOSPatterns(patternData, 5);
+
+  // Mock sparkline data (last 6 cycles)
+  const recentCycleLengths = [27, 29, 28, 30, 27, 28];
+
+  // Derive alert from top AI insight
+  const topAlert = aiInsights[0];
 
   return (
-    <main className="min-h-screen bg-background pt-6 pb-12 px-4 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-5xl">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2 text-balance">Health Insights</h1>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Understanding your patterns. What your body is telling you over time.
-          </p>
-        </div>
-
-        {/* Navigation info */}
-        <div className="mb-8 p-4 bg-muted/30 rounded-lg border border-border">
-          <p className="text-sm text-muted-foreground">
-            <span className="font-semibold">How this works:</span> This dashboard analyzes your cycle, symptoms, and
-            mood patterns to help you understand what's happening with your body. No judgment. No diagnosis. Just
-            helpful observations.
-          </p>
-        </div>
-
-        {/* Layer 1: Pattern Visualization */}
-        <div className="mb-12">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground">What's Happening</h2>
-            <p className="text-muted-foreground mt-1">Pure observation of your patterns</p>
+    <main className="h-screen bg-gradient-to-br from-slate-50 via-rose-50/20 to-purple-50/20 p-5 overflow-hidden">
+      <div className="mx-auto max-w-[1400px] h-full flex flex-col">
+        {/* ─── Header bar ─── */}
+        <div className="flex items-center justify-between mb-5 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="bg-white p-2 rounded-xl shadow-sm border border-slate-100">
+              <Sparkles className="h-5 w-5 text-rose-500" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-slate-800">
+                Cycle Insights
+              </h1>
+              <p className="text-[11px] text-slate-400">
+                Feb 2026 · Last 6 cycles
+              </p>
+            </div>
           </div>
+          <button className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-white px-4 py-2 rounded-xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
+            <Download className="h-3.5 w-3.5" />
+            Export
+          </button>
+        </div>
 
-          <div className="grid gap-6">
-            <InsightsCycleStability
+        {/* ─── Bento Grid: 12 columns × 3 fixed rows ─── */}
+        <div className="flex-1 grid grid-cols-12 grid-rows-[260px_260px_260px] gap-6 min-h-0">
+          {/* ═══ TOP ROW ═══ */}
+
+          {/* T1: Cycle Snapshot — hero tile */}
+          <div className="col-span-5 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            <CycleSnapshotTile
               cycleLength={patternData.cycleLength}
-              variability={patternData.cycleVariability}
-              missedCycles={patternData.missedCycles}
-              delayedCycles={patternData.delayedCycles}
+              regularity={92}
+              wellnessScore={8.5}
             />
-
-            <InsightsSymptomFrequency symptoms={patternData.symptoms} />
-
-            <InsightsMoodOverlay moodTrends={patternData.moodTrends} />
-          </div>
-        </div>
-
-        {/* Layer 2: AI Insights */}
-        <div className="mb-12">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground">What It Might Mean</h2>
-            <p className="text-muted-foreground mt-1">AI-assisted interpretation of your patterns</p>
           </div>
 
-          <div className="grid gap-4">
-            {aiInsights.length > 0 ? (
-              aiInsights.map((insight) => <InsightsAIInsightCard key={insight.id} insight={insight} />)
+          {/* T2: Pattern Stability */}
+          <div className="col-span-5 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            <PatternStabilityTile
+              variability={patternData.cycleVariability}
+              cycleLengths={recentCycleLengths}
+            />
+          </div>
+
+          {/* T3: Key Alert */}
+          <div className="col-span-2 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            {topAlert ? (
+              <AlertHighlightTile
+                title={topAlert.title}
+                description={topAlert.whatNoticed}
+                severity={topAlert.severity}
+              />
             ) : (
-              <div className="p-6 text-center text-muted-foreground">No significant patterns detected yet.</div>
+              <AlertHighlightTile
+                title="All clear"
+                description="No significant patterns flagged right now."
+                severity="low"
+              />
             )}
           </div>
-        </div>
 
-        {/* Layer 3: Risk & Anomaly Signals */}
-        <div className="mb-12">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground">What to Keep an Eye On</h2>
-            <p className="text-muted-foreground mt-1">Gentle signals about your patterns</p>
+          {/* ═══ MIDDLE ROW ═══ */}
+
+          {/* M1: Symptom Frequency Bar Chart */}
+          <div className="col-span-5 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            <SymptomBarChartTile symptoms={patternData.symptoms} />
           </div>
 
-          <InsightsRiskSignals signal={riskSignal} />
-        </div>
-
-        {/* Layer 4: PCOS Condition-Awareness */}
-        {pcosAwareness.activated && (
-          <div className="mb-12">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-foreground">Condition-Specific Insights</h2>
-              <p className="text-muted-foreground mt-1">Pattern awareness related to specific conditions</p>
-            </div>
-
-            <InsightsPCOSModule awareness={pcosAwareness} />
-          </div>
-        )}
-
-        {/* Doctor Support */}
-        <div className="mb-12">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-foreground">Doctor-Supportive Tools</h2>
-            <p className="text-muted-foreground mt-1">Making your doctor visits more productive</p>
+          {/* M2: Mood & Stress Correlation */}
+          <div className="col-span-5 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            <MoodCorrelationTile moodTrends={patternData.moodTrends} />
           </div>
 
-          <InsightsDoctorExport
-            cycleLength={patternData.cycleLength}
-            cyclesTracked={5}
-            patterns={riskSignal.patterns}
-          />
-        </div>
-
-        {/* Control & Ethics */}
-        <div className="grid gap-6 mb-8">
-          <div className="p-6 bg-muted/30 rounded-lg border border-border">
-            <h3 className="font-semibold text-foreground mb-3">You're in Control</h3>
-            <ul className="text-sm text-muted-foreground space-y-2">
-              <li className="flex gap-2">
-                <span className="text-primary">→</span>
-                <span>You can enable or disable any insights at any time</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-primary">→</span>
-                <span>You can disable condition-awareness modules if you prefer</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-primary">→</span>
-                <span>All your data stays on your device—nothing is shared</span>
-              </li>
-              <li className="flex gap-2">
-                <span className="text-primary">→</span>
-                <span>You can delete all insights anytime you want</span>
-              </li>
-            </ul>
+          {/* M3: Cycle Phase Ring Map */}
+          <div className="col-span-2 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            <CyclePhaseRingTile symptoms={patternData.symptoms} />
           </div>
 
-          <div className="p-6 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 className="font-semibold text-blue-900 mb-3">Important Disclaimer</h3>
-            <p className="text-sm text-blue-800 leading-relaxed">
-              This tool provides observations and pattern recognition to support your health conversations with your
-              doctor. It is <strong>not</strong> medical diagnosis. These observations should inform discussions with
-              healthcare providers, not replace professional medical evaluation. Only a doctor can diagnose conditions.
-            </p>
+          {/* ═══ BOTTOM ROW ═══ */}
+
+          {/* B1: AI Insights Summary */}
+          <div className="col-span-5 bg-gradient-to-br from-white to-purple-50/30 rounded-2xl p-4 shadow-sm border border-purple-100/50 overflow-hidden">
+            <AIInsightsSummaryTile insights={aiInsights} />
+          </div>
+
+          {/* B2: Pattern Awareness — PCOS/PMS */}
+          <div className="col-span-5 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            <PatternAwarenessTile awareness={pcosAwareness} />
+          </div>
+
+          {/* B3: Overall Status */}
+          <div className="col-span-2 bg-white rounded-2xl p-4 shadow-sm border border-slate-100/80 overflow-hidden">
+            <OverallStatusTile
+              zone={riskSignal.zone}
+              patternsCount={riskSignal.patterns.length}
+            />
           </div>
         </div>
       </div>
     </main>
-  )
+  );
 }
