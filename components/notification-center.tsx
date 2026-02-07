@@ -38,7 +38,7 @@ export function NotificationCenter({
   const unreadCount = notifications.filter((n) => !n.read).length
 
   return (
-    <div className="absolute right-0 top-full mt-2 w-[360px] max-h-[480px] rounded-lg border border-border bg-card shadow-xl overflow-hidden z-[70] flex flex-col">
+    <div className="absolute top-full mt-2 w-[360px] max-h-[480px] rounded-lg border border-border bg-card shadow-xl overflow-hidden z-[70] flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-muted/30">
         <div className="flex items-center gap-2">

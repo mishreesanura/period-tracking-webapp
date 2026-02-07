@@ -1,13 +1,14 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CycleLegende } from "./cycle-legend";
 import { MonthlyCalendarView } from "./monthly-calendar-view";
 import { WeeklyCalendarView } from "./weekly-calendar-view";
 import { DailyDetailPanel, type DailyLogData } from "./daily-detail-panel";
+import { CyclePhaseOverview } from "./cycle-phase-overview";
 import { calculateCyclePhase, type CycleData } from "@/lib/cycle-utils";
 import { formatDateKey } from "@/lib/utils";
 
@@ -37,6 +38,18 @@ export function CycleCalendar() {
     new Map(),
   );
 
+  const prevMonth = () => {
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1),
+    );
+  };
+
+  const nextMonth = () => {
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1),
+    );
+  };
+
   const handleSaveLog = (data: DailyLogData) => {
     if (!selectedDate) return;
     const dateStr = formatDateKey(selectedDate);
@@ -60,21 +73,6 @@ export function CycleCalendar() {
       0,
     );
 
-    // We need to generate data for a bit more than just the month to cover weekly view transitions
-    // Taking 1 week before and 1 week after to be safe (simplified here to just month for now,
-    // but the views usually request their own range.
-    // Ideally, calendarData should be generated based on the view's needs,
-    // or we generate a larger range here.)
-    // For now, let's stick to the current month logic but expanding the loop might be safer
-    // if the view asks for days outside this month.
-    // However, the views receive `calendarData` which is a Map.
-    // Let's generate for the whole displayed grid range effectively.
-
-    // Actually, let's just generate for the current month +/- some buffer
-    // Or better, since `WeeklyView` and `MonthlyView` compute their own dates,
-    // lets ensure we populate the Map for any date likely to be requested.
-
-    // Quick fix: loop from 15 days before start to 15 days after end of month
     const rangeStart = new Date(startOfMonth);
     rangeStart.setDate(rangeStart.getDate() - 15);
     const rangeEnd = new Date(endOfMonth);
@@ -96,7 +94,6 @@ export function CycleCalendar() {
         periodDurationDays,
       );
 
-      // Override with user log if available
       if (log?.isPeriod) {
         cycleData = { ...cycleData, phase: "period", isPredicted: false };
       }
@@ -124,151 +121,134 @@ export function CycleCalendar() {
     userLogs,
   ]);
 
-  const today = new Date();
-  const daysDiff = Math.ceil(
-    (new Date(
-      cycleStartDate.getFullYear(),
-      cycleStartDate.getMonth(),
-      cycleStartDate.getDate() + cycleLengthDays,
-    ).getTime() -
-      today.getTime()) /
-      (1000 * 60 * 60 * 24),
-  );
-
-  const getContextMessage = () => {
-    if (daysDiff <= 0) return "Period expected now";
-    if (daysDiff === 1) return "Period expected tomorrow";
-    if (daysDiff <= 3) return `Period expected in ${daysDiff} days`;
-    if (daysDiff <= 7)
-      return `Ovulation window starts in about ${daysDiff - 7} days`;
-    return "Cycle tracking active";
-  };
-
   return (
-    <div className="w-full max-w-5xl mx-auto p-4 md:p-8 space-y-8">
-      {/* Header Section */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-800 tracking-tight">
-            My Cycle
-          </h1>
-          <p className="text-slate-500 mt-1">{getContextMessage()}</p>
+    <div className="flex flex-col h-full w-full p-4 overflow-hidden gap-4">
+      {/* Header Countdown Section */}
+      <section className="flex-none animate-in fade-in slide-in-from-top-2 duration-500">
+         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div className="md:pl-10 transition-all flex-none"> {/* Added padding to prevent overlap with SidebarTrigger */}
+              <h1 className="text-2xl font-bold text-slate-900 tracking-tight">Cycle Tracking</h1>
+              <p className="text-sm text-slate-500 hidden sm:block">
+                Monitor your rhythm and health.
+              </p>
+            </div>
+            
+            <div className="w-full lg:w-auto">
+               <CyclePhaseOverview 
+                  cycleStartDate={cycleStartDate} 
+                  cycleLengthDays={cycleLengthDays}
+                  periodDurationDays={periodDurationDays}
+               />
+            </div>
+         </div>
+      </section>
+
+      <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-4 min-h-0">
+        {/* Main Calendar Area */}
+        <div className={`${selectedDate ? 'lg:col-span-8' : 'lg:col-span-12'} flex flex-col h-full min-h-0 transition-all duration-500 ease-in-out`}>
+          <Card className="flex-1 flex flex-col shadow-sm border-slate-100 bg-white/50 backdrop-blur-xl rounded-[24px] overflow-hidden">
+            <div className="p-4 flex flex-col h-full">
+              {/* Calendar Header Controls */}
+              <div className="flex-none flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
+                
+                <div className="flex items-center gap-1 bg-slate-50 p-1 rounded-full border border-slate-100">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={prevMonth}
+                    className="h-7 w-7 rounded-full hover:bg-white hover:text-rose-500 hover:shadow-sm transition-all"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <span className="text-sm font-bold text-slate-700 min-w-[120px] text-center">
+                    {currentMonth.toLocaleDateString("en-US", {
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={nextMonth}
+                    className="h-7 w-7 rounded-full hover:bg-white hover:text-rose-500 hover:shadow-sm transition-all"
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                   <div className="flex bg-slate-100 p-0.5 rounded-lg scale-90 origin-right sm:scale-100">
+                      <button
+                        onClick={() => setView("monthly")}
+                        className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all ${view === 'monthly' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                         Month
+                      </button>
+                      <button
+                        onClick={() => setView("weekly")}
+                        className={`px-3 py-1.5 rounded-md text-[11px] font-semibold transition-all ${view === 'weekly' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500 hover:text-slate-700'}`}
+                      >
+                         Week
+                      </button>
+                   </div>
+                   <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => {
+                        const now = new Date();
+                        setCurrentMonth(now);
+                        setSelectedDate(now);
+                      }}
+                      className="text-[11px] h-8 px-3 border-slate-200 text-slate-600 hover:text-rose-600 hover:border-rose-200"
+                   >
+                      Today
+                   </Button>
+                </div>
+              </div>
+
+              {/* View Rendering - Scrollable Area */}
+              <div className="flex-1 overflow-y-auto min-h-0 pr-1 -mr-1">
+                {view === "monthly" ? (
+                  <MonthlyCalendarView
+                    currentMonth={currentMonth}
+                    calendarData={calendarData}
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                    today={new Date()}
+                  />
+                ) : (
+                  <WeeklyCalendarView
+                    currentMonth={currentMonth}
+                    calendarData={calendarData}
+                    selectedDate={selectedDate}
+                    onDateSelect={setSelectedDate}
+                    today={new Date()}
+                  />
+                )}
+                
+                {/* Legend at bottom of scrollable area */}
+                <div className="mt-4 pt-4 border-t border-slate-50/50">
+                  <CycleLegende />
+                </div>
+              </div>
+            </div>
+          </Card>
         </div>
 
-        {/* View Toggle - Segmented Control */}
-        <div className="bg-slate-100/80 p-1 rounded-full inline-flex items-center shadow-sm backdrop-blur-sm">
-          <button
-            onClick={() => setView("monthly")}
-            className={`
-              px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-out
-              ${
-                view === "monthly"
-                  ? "bg-white text-slate-800 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
-              }
-            `}
-          >
-            Monthly
-          </button>
-          <button
-            onClick={() => setView("weekly")}
-            className={`
-              px-6 py-2 rounded-full text-sm font-medium transition-all duration-300 ease-out
-              ${
-                view === "weekly"
-                  ? "bg-white text-slate-800 shadow-sm"
-                  : "text-slate-500 hover:text-slate-700 hover:bg-slate-200/50"
-              }
-            `}
-          >
-            Weekly
-          </button>
-        </div>
-      </div>
-
-      {/* Main Calendar Card */}
-      <Card className="border-0 shadow-lg shadow-slate-200/50 rounded-3xl overflow-hidden bg-white/80 backdrop-blur-xl">
-        <div className="p-6 md:p-8">
-          {/* Month Navigation */}
-          <div className="flex items-center justify-between mb-8 px-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-rose-50 hover:text-rose-600 rounded-full w-10 h-10 transition-colors"
-              onClick={() =>
-                setCurrentMonth(
-                  new Date(
-                    currentMonth.getFullYear(),
-                    currentMonth.getMonth() - 1,
-                  ),
-                )
-              }
-              aria-label="Previous month"
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-
-            <h2 className="text-2xl font-bold text-slate-700 min-w-48 text-center tracking-wide">
-              {currentMonth.toLocaleDateString("en-US", {
-                month: "long",
-                year: "numeric",
-              })}
-            </h2>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="hover:bg-rose-50 hover:text-rose-600 rounded-full w-10 h-10 transition-colors"
-              onClick={() =>
-                setCurrentMonth(
-                  new Date(
-                    currentMonth.getFullYear(),
-                    currentMonth.getMonth() + 1,
-                  ),
-                )
-              }
-              aria-label="Next month"
-            >
-              <ChevronRight className="h-5 w-5" />
-            </Button>
+        {/* Side Panel (Daily Details) */}
+        {selectedDate && (
+          <div className="lg:col-span-4 flex flex-col h-full min-h-0 animate-in fade-in slide-in-from-right-4 duration-300">
+               <div className="flex-1 overflow-y-auto rounded-[24px] border border-slate-100 bg-white shadow-lg">
+                  <DailyDetailPanel
+                    date={selectedDate}
+                    data={userLogs.get(formatDateKey(selectedDate))}
+                    onSave={handleSaveLog}
+                    onClose={() => setSelectedDate(null)}
+                  />
+               </div>
           </div>
-
-          <div className="min-h-[400px]">
-            {view === "monthly" ? (
-              <MonthlyCalendarView
-                currentMonth={currentMonth}
-                calendarData={calendarData}
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-                today={today}
-              />
-            ) : (
-              <WeeklyCalendarView
-                currentMonth={currentMonth}
-                calendarData={calendarData}
-                selectedDate={selectedDate}
-                onDateSelect={setSelectedDate}
-                today={today}
-              />
-            )}
-          </div>
-        </div>
-      </Card>
-
-      {/* Legend - Moved to bottom and distinct */}
-      <div className="bg-white/60 rounded-2xl p-6 backdrop-blur-sm border border-slate-100">
-        <CycleLegende />
+        )}
       </div>
-
-      {/* Daily Detail Panel */}
-      {selectedDate && (
-        <DailyDetailPanel
-          date={selectedDate}
-          onClose={() => setSelectedDate(null)}
-          onSave={handleSaveLog}
-          initialData={userLogs.get(formatDateKey(selectedDate))}
-        />
-      )}
     </div>
   );
 }
