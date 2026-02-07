@@ -1,4 +1,5 @@
 import React from "react"
+import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono, Instrument_Sans } from 'next/font/google'
 
@@ -21,11 +22,13 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
+    <ClerkProvider>
     <html lang="en">
       <body className={`${_geist.variable} ${instrumentSans.variable} font-sans antialiased bg-background text-foreground`} suppressHydrationWarning>
         <MainNavigation />
         {children}
       </body>
     </html>
+    </ClerkProvider>
   )
 }

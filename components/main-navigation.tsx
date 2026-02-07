@@ -4,6 +4,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Calendar, BookOpen, Home, Heart, Activity, Droplet, Sparkles, Music, Settings, GraduationCap, Utensils, User, BarChart3 } from 'lucide-react'
 import { NotificationBell } from '@/components/notification-bell'
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 export function MainNavigation() {
   const pathname = usePathname()
@@ -82,6 +90,21 @@ export function MainNavigation() {
           
           <div className="flex-shrink-0 flex items-center justify-end min-w-[40px]">
             <NotificationBell />
+            
+              {/* Show the sign-in and sign-up buttons when the user is signed out */}
+              <SignedOut>
+                <SignInButton />
+                <SignUpButton>
+                  <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                    Sign Up
+                  </button>
+                </SignUpButton>
+              </SignedOut>
+              {/* Show the user button when the user is signed in */}
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+            
           </div>
         </div>
       </div>
